@@ -6,9 +6,11 @@ from clientui import Ui_MainWindow
 
 
 class MessengerApp(QtWidgets.QMainWindow, Ui_MainWindow):
-    def __init__(self):
+    def __init__(self, host='127.0.0.1:5000'):
         super().__init__()
         self.setupUi(self)
+
+        self.host = host
 
         self.pushButton.pressed.connect(self.send_message)
 
@@ -27,7 +29,7 @@ class MessengerApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def get_messages(self):
         try:
             response = requests.get(
-                'http://127.0.0.1:5000/messages',
+                'https://' + self.host + '/messages',
                 params={'after': self.after}
             )
         except:
@@ -44,7 +46,7 @@ class MessengerApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         try:
             response = requests.post(
-                'http://127.0.0.1:5000/send',
+                'http://' + self.host + 'send',
                 json={'name': name, 'text': text}
             )
         except:
@@ -61,6 +63,6 @@ class MessengerApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.textEdit.clear()
 
 app = QtWidgets.QApplication([])
-window = MessengerApp()
+window = MessengerApp('messengeralexeyklem.herokuapp.com')
 window.show()
 app.exec()
